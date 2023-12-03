@@ -2,96 +2,50 @@
 #include "GLFW/glfw3.h"
 
 #include <iostream>
-#include <fstream>
-#include <string>
-#include <sstream>
 
 #include "Renderer.h"
 
 #include "VertexBuffer.h"
+#include "VertexBufferLayout.h"
 #include "IndexBuffer.h"
+#include "VertexArray.h"
+#include "Shader.h"
+#include "Texture.h"
 
-struct ShaderProgramSource
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+
+#define WIDTH 1080
+#define HEIGHT 1080
+
+glm::vec3 camerapos;
+
+float speed = 0.01f;
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	std::string VertexSource;
-	std::string FragmentSource;
-};
+	std::cout << key << std::endl;
 
-static ShaderProgramSource ParseShader(const std::string& filepath)
-{
-	std::ifstream stream(filepath);
-
-	enum class ShaderType
+	switch (key)
 	{
-		NONE = -1, VERTEX = 0, FRAGMENT = 1
-	};
-
-	std::string line;
-	std::stringstream ss[2];
-	ShaderType type = ShaderType::NONE;
-	while (getline(stream, line))
-	{
-		if (line.find("#shader") != std::string::npos)
-		{
-			if (line.find("vertex") != std::string::npos)
-				type = ShaderType::VERTEX;
-			else if (line.find("fragment") != std::string::npos)
-				type = ShaderType::FRAGMENT;
-		} 
-		else
-		{
-			ss[(int)type] << line << '\n';
-		}
+	case 87: camerapos += glm::vec3(	0.f,	0.f,	-1.f) * speed;
+		break;
+	case 83: camerapos += glm::vec3(	0.f,	0.f,	1.f) * speed;
+		break;
+	case 65: camerapos += glm::vec3(	-1.f,	0.f,	0.f) * speed;
+		break;
+	case 68: camerapos += glm::vec3(	1.f,	0.f,	0.f) * speed;
+		break;
 	}
 
-	return { ss[0].str(), ss[1].str() };
-}
+	std::cout << camerapos[2] << std::endl;
 
-static unsigned int CompileShader(unsigned int type, const std::string& source)
-{
-	unsigned int id = glCreateShader(type);
-	const char* src = source.c_str();
-	glShaderSource(id, 1, &src, nullptr);
-	glCompileShader(id);
-
-	int result;
-	glGetShaderiv(id, GL_COMPILE_STATUS, &result);
-	if (!result)
-	{
-		int length;
-		glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
-		char* message = (char*)alloca(length * sizeof(char));
-		glGetShaderInfoLog(id, length, &length, message);
-
-		std::cout << "Failed to compile " << (type == GL_VERTEX_SHADER? "vertex" : "fragment") << " shader!" << std::endl;
-		std::cout << message << std::endl;
-
-		glDeleteShader(id);
-		return 0;
-	}
-
-	return id;
-}
-
-static unsigned int CreateShader(const std::string& vertexShader, const std::string& fragmentShader)
-{
-	unsigned int program = glCreateProgram();
-	unsigned int vs = CompileShader(GL_VERTEX_SHADER, vertexShader);
-	unsigned int fs = CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
-
-	glAttachShader(program, vs);
-	glAttachShader(program, fs);
-	glLinkProgram(program);
-	glValidateProgram(program);
-
-	glDeleteShader(vs);
-	glDeleteShader(fs);
-
-	return program;
 }
 
 int main(void)
 {
+	camerapos = glm::vec3(0.f, 0.f, 0.f);
+
 	{
 		GLFWwindow* window;
 		/* Initialize the library */
@@ -102,7 +56,7 @@ int main(void)
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-		window = glfwCreateWindow(1440, 1440, "Knimoms' 3D Engine", NULL, NULL);
+		window = glfwCreateWindow(1080, 1080, "Knimoms' 3D Engine", NULL, NULL);
 
 		/* Create a windowed mode window and its OpenGL context */
 		if (!window)
@@ -114,6 +68,8 @@ int main(void)
 		/* Make the window's context current */
 		glfwMakeContextCurrent(window);
 
+		glfwSetKeyCallback(window, key_callback);
+
 		glfwSwapInterval(10);
 
 		if (glewInit() != GLEW_OK)
@@ -123,10 +79,11 @@ int main(void)
 
 		float positions[] =
 		{
-			-0.5f, -0.5f,
-			 0.5f, -0.5f,
-			 0.5f,  0.5f,
-			-0.5f,  0.5f,
+			/*vertices         texturecoords*/
+			-0.5f,	-0.5f,  0.f, 0.0f, 0.0f,
+			 0.5f,	-0.5f,	0.f, 1.0f, 0.0f,
+			 0.5f,	 0.5f,	0.f, 1.0f, 1.0f,
+			-0.5f,	 0.5f,	0.f, 0.0f, 1.0f
 		};
 
 		unsigned int  indices[] =
@@ -135,55 +92,50 @@ int main(void)
 			2, 3, 0
 		};
 
-		unsigned int vao;
-		GLCall(glGenVertexArrays(1, &vao));
-		GLCall(glBindVertexArray(vao));
+		GLCall(glEnable(GL_BLEND));
+		GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
-		VertexBuffer vb(positions, 4 * 2 * sizeof(float));
-
-		GLCall(glEnableVertexAttribArray(0));
-		GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0));
+		VertexArray va;
+		VertexBuffer vb(positions, 4 * 5 * sizeof(float));
+		VertexBufferLayout layout;
+		layout.Push<float>(3);
+		layout.Push<float>(2);
+		va.AddBuffer(vb, layout);
 
 		IndexBuffer ib(indices, 6);
 
-		ShaderProgramSource source = ParseShader("res/shaders/Basic.shader");
+		glm::mat4 perspective = glm::perspective(glm::radians(45.f), (float)WIDTH/(float)HEIGHT, 0.1f, 10.f);
+		glm::mat4 view = glm::translate(glm::mat4(1.f), camerapos);
+		glm::mat4 model = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, -5.f));
+		model = glm::rotate(model, glm::radians(45.f), glm::vec3(0.f, 1.f, 0.f));
 
-		unsigned int shader = CreateShader(source.VertexSource, source.FragmentSource);
-		GLCall(glUseProgram(shader));
+		Shader shader("res/shaders/Basic.shader");
+		shader.Bind();
 
-		int location = glGetUniformLocation(shader, "u_Color");
-		ASSERT(location != -1);
-		GLCall(glUniform4f(location, 0.2f, 0.3f, 0.8f, 1.0f));
+		Texture texture("res/textures/unknown.png");
+		texture.Bind();
+		shader.SetUniform1i("u_Texture", 0);
+		shader.SetUniformMat4f("u_Perspective", perspective);
+		shader.SetUniformMat4f("u_Model", model);
+		shader.SetUniformMat4f("u_View", view);
 
+		va.Unbind();
+		shader.Unbind();
+		vb.Unbind();
+		ib.Unbind();
 
-		GLCall(glBindVertexArray(0));
-		GLCall(glUseProgram(0));
-		GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
-		GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
-
-		float r = 0.0f;
-		float increment = 0.05f;
+		Renderer renderer;
 
 		/* Loop until the user closes the window */
 		while (!glfwWindowShouldClose(window))
 		{
-			/* Render here */
-			glClear(GL_COLOR_BUFFER_BIT);
-			GLCall(glUseProgram(shader));
+			renderer.Clear();
 
-			GLCall(glUniform4f(location, r, 0.3f, 0.8f, 1.0f));
+			shader.Bind();
+			glm::mat4 view2 = glm::translate(glm::mat4(1.f), -1.f*camerapos);
+			shader.SetUniformMat4f("u_View", view2);
 
-			GLCall(glBindVertexArray(vao));
-			ib.Bind();
-
-			GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
-
-			if (r > 1.f)
-				increment = -0.05f;
-			else if (r < 0.f)
-				increment = 0.05f;
-
-			r += increment;
+			renderer.Draw(va, ib, shader);
 
 			/* Swap front and back buffers */
 			glfwSwapBuffers(window);
@@ -191,8 +143,6 @@ int main(void)
 			/* Poll for and process events */
 			glfwPollEvents();
 		}
-
-		glDeleteProgram(shader);
 	}
 	glfwTerminate();
 	return 0;
