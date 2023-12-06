@@ -8,11 +8,14 @@
 VertexArray::VertexArray()
 {
 	GLCall(glGenVertexArrays(1, &m_RendererID));
+	std::cout << m_RendererID << std::endl;
 }
 
 VertexArray::~VertexArray()
 {
 	GLCall(glDeleteVertexArrays(1, &m_RendererID));
+	std::cout << m_RendererID << std::endl;
+
 }
 
 void VertexArray::AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout)
