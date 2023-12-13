@@ -16,7 +16,7 @@
 #include "Camera.h"
 #include "Mesh.h"
 
-#include "WorldGeometryObject.h"
+#include "Transform.h"
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -116,12 +116,6 @@ void Application3D::Run()
 
 		Mesh grassBlockMesh(positions, indices, tex);
 
-		WorldGeometryObject GrassBlock;
-
-		GrassBlock.SetMesh(&grassBlockMesh);
-
-		GrassBlock.Move(glm::vec3(0, 0.5f, 0));
-
 		std::vector<Vertex> floorVertices =
 		{
 			{glm::vec3(-20.f, 0.f,  20.f), glm::vec3(0.f, 1.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f)},
@@ -146,14 +140,6 @@ void Application3D::Run()
 		std::vector<Texture>s(floorTextures, floorTextures + sizeof(floorTextures) / sizeof(Texture));
 
 		Mesh FloorMesh(floorVertices, floorIndices, s);
-
-		WorldGeometryObject Floor = WorldGeometryObject();
-		Floor.SetMesh(&FloorMesh);
-
-		Floor.Rotate(glm::vec3(0, 0, 0));
-
-		Floor.SetScale(glm::vec3(2, 2, 2));
-
 
 		Renderer renderer;
 
@@ -180,7 +166,7 @@ void Application3D::Run()
 			m_InputHandler->KeyboardMovementInputTick();
 			renderer.Clear();
 
-			renderer.DrawMeshWithTransforms(*GrassBlock.GetMesh(), shader, m_Camera, GrassBlockTransforms);
+			renderer.DrawMeshWithTransforms(grassBlockMesh, shader, m_Camera, GrassBlockTransforms);
 
 			/* Swap front and back buffers */
 			glfwSwapBuffers(m_Window);
