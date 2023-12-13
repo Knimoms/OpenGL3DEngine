@@ -6,9 +6,7 @@ Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, st
 {
 	VertexBufferLayout layout;
 	layout.Push<float>(3);
-	layout.Push<float>(3);
-	layout.Push<float>(3);
-	layout.Push<float>(3);
+	layout.Push<float>(2);
 
 	m_VertexArray.AddBuffer(m_VertexBuffer, layout);
 }

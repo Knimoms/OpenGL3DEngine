@@ -101,36 +101,36 @@ void Application3D::Run()
 
 		std::vector<Vertex> grassBlockVertices =
 		{
-						/*position						normal					color					texturecoords*/
-			{glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec3( 0.f, 0.f,  1.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.0f, 0.0f, 0.f)},
-			{glm::vec3( 0.5f, -0.5f,  0.5f), glm::vec3( 0.f, 0.f,  1.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.5f, 0.0f, 0.f)},
-			{glm::vec3( 0.5f,  0.5f,  0.5f), glm::vec3( 0.f, 0.f,  1.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.5f, 0.5f, 0.f)},
-			{glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec3( 0.f, 0.f,  1.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.0f, 0.5f, 0.f)},
-													    
-			{glm::vec3( 0.5f, -0.5f,  0.5f), glm::vec3( 1.f, 0.f,  0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.0f, 0.0f, 0.f)},
-			{glm::vec3( 0.5f, -0.5f, -0.5f), glm::vec3( 1.f, 0.f,  0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.5f, 0.0f, 0.f)},
-			{glm::vec3( 0.5f,  0.5f, -0.5f), glm::vec3( 1.f, 0.f,  0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.5f, 0.5f, 0.f)},
-			{glm::vec3( 0.5f,  0.5f,  0.5f), glm::vec3( 1.f, 0.f,  0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.0f, 0.5f, 0.f)},
-													    
-			{glm::vec3( 0.5f, -0.5f, -0.5f), glm::vec3( 0.f, 0.f, -1.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.0f, 0.0f, 0.f)},
-			{glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3( 0.f, 0.f, -1.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.5f, 0.0f, 0.f)},
-			{glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec3( 0.f, 0.f, -1.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.5f, 0.5f, 0.f)},
-			{glm::vec3( 0.5f,  0.5f, -0.5f), glm::vec3( 0.f, 0.f, -1.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.0f, 0.5f, 0.f)},
-
-			{glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(-1.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.0f, 0.0f, 0.f)},
-			{glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec3(-1.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.5f, 0.0f, 0.f)},
-			{glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec3(-1.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.5f, 0.5f, 0.f)},
-			{glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec3(-1.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.0f, 0.5f, 0.f)},
-
-			{glm::vec3( 0.5f,  0.5f,  0.5f), glm::vec3( 0.f, 1.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.5f, 0.0f, 0.f)},
-			{glm::vec3( 0.5f,  0.5f, -0.5f), glm::vec3( 0.f, 1.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.0f, 0.0f, 0.f)},
-			{glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec3( 0.f, 1.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.0f, 0.5f, 0.f)},
-			{glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec3( 0.f, 1.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.5f, 0.5f, 0.f)},
-
-			{glm::vec3( 0.5f, -0.5f,  0.5f), glm::vec3( 0.f, -1.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.0f, 0.5f, 0.f)},
-			{glm::vec3( 0.5f, -0.5f, -0.5f), glm::vec3( 0.f, -1.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.5f, 0.5f, 0.f)},
-			{glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3( 0.f, -1.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.5f, 1.0f, 0.f)},
-			{glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec3( 0.f, -1.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.0f, 1.0f, 0.f)}
+						/*position				texturecoords*/
+			{glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec2(0.0f, 0.0f)},
+			{glm::vec3( 0.5f, -0.5f,  0.5f), glm::vec2(0.5f, 0.0f)},
+			{glm::vec3( 0.5f,  0.5f,  0.5f), glm::vec2(0.5f, 0.5f)},
+			{glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec2(0.0f, 0.5f)},
+													 
+			{glm::vec3( 0.5f, -0.5f,  0.5f), glm::vec2(0.0f, 0.0f)},
+			{glm::vec3( 0.5f, -0.5f, -0.5f), glm::vec2(0.5f, 0.0f)},
+			{glm::vec3( 0.5f,  0.5f, -0.5f), glm::vec2(0.5f, 0.5f)},
+			{glm::vec3( 0.5f,  0.5f,  0.5f), glm::vec2(0.0f, 0.5f)},
+													 
+			{glm::vec3( 0.5f, -0.5f, -0.5f), glm::vec2(0.0f, 0.0f)},
+			{glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec2(0.5f, 0.0f)},
+			{glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec2(0.5f, 0.5f)},
+			{glm::vec3( 0.5f,  0.5f, -0.5f), glm::vec2(0.0f, 0.5f)},
+													 
+			{glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec2(0.0f, 0.0f)},
+			{glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec2(0.5f, 0.0f)},
+			{glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec2(0.5f, 0.5f)},
+			{glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec2(0.0f, 0.5f)},
+													 
+			{glm::vec3( 0.5f,  0.5f,  0.5f), glm::vec2(0.5f, 0.0f)},
+			{glm::vec3( 0.5f,  0.5f, -0.5f), glm::vec2(1.0f, 0.0f)},
+			{glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec2(1.0f, 0.5f)},
+			{glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec2(0.5f, 0.5f)},
+													 
+			{glm::vec3( 0.5f, -0.5f,  0.5f), glm::vec2(0.0f, 0.5f)},
+			{glm::vec3( 0.5f, -0.5f, -0.5f), glm::vec2(0.5f, 0.5f)},
+			{glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec2(0.5f, 1.0f)},
+			{glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec2(0.0f, 1.0f)}
 		};
 
 		std::vector<unsigned int> grassBlockIndices =
@@ -169,10 +169,10 @@ void Application3D::Run()
 
 		std::vector<Vertex> floorVertices =
 		{
-			{glm::vec3(-20.f, 0.f,  20.f), glm::vec3(0.f, 1.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f)},
-			{glm::vec3( 20.f, 0.f,  20.f), glm::vec3(0.f, 1.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 0.f, 0.f)},
-			{glm::vec3( 20.f, 0.f, -20.f), glm::vec3(0.f, 1.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 1.f, 0.f)},
-			{glm::vec3(-20.f, 0.f, -20.f), glm::vec3(0.f, 1.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 1.f, 0.f)},
+			{glm::vec3(-20.f, 0.f,  20.f), glm::vec2(0.f, 0.f)},
+			{glm::vec3( 20.f, 0.f,  20.f), glm::vec2(1.f, 0.f)},
+			{glm::vec3( 20.f, 0.f, -20.f), glm::vec2(1.f, 1.f)},
+			{glm::vec3(-20.f, 0.f, -20.f), glm::vec2(0.f, 1.f)},
 		};
 
 		std::vector<unsigned int> floorIndices =
@@ -215,7 +215,7 @@ void Application3D::Run()
 
 			//renderer.DrawMeshWithTransforms(grassBlockMesh, shader, m_Camera, GrassBlockTransforms);
 
-			renderer.DrawMeshWithTransform(grassBlockMesh, shader, m_Camera, { glm::vec3(0, 2, -3), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) });
+			renderer.DrawMeshWithTransform(grassBlockMesh, shader, m_Camera, { glm::vec3(0, 1.5f, -5), glm::vec3(0, 45, 0), glm::vec3(1, 1, 1) });
 			//renderer.DrawMeshWithTransform(FloorMesh, shader, m_Camera, floorTransform);
 
 			/* Swap front and back buffers */
