@@ -11,6 +11,9 @@ void Renderer::Draw(const VertexArray& va, const IndexBuffer& ib, const Shader& 
 	ib.Bind();
 	shader.Bind();
 
+	glm::mat4 modelMatrix(1.0);
+
+	shader.SetUniformMat4f("u_Model", modelMatrix);
 	shader.SetUniformMat4f("u_Projection", camera.GetProjectionMatrix());
 	shader.SetUniformMat4f("u_View", camera.GetViewMatrix());
 
