@@ -35,15 +35,66 @@ Application3D::Application3D(const std::string& appName, int windowPixelWidth, i
 	m_InputHandler->SetControllingCamera(&m_Camera);
 }
 
+int Application3D::SetupGLFWWindow()
+{
+	/* Initialize the library */
+	if (!glfwInit())
+		return -1;
+
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+	//GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
+
+	m_Window = glfwCreateWindow(m_WindowWidth, m_WindowHeight, m_AppName.c_str(), NULL, NULL);
+
+	/* Create a windowed mode window and its OpenGL context */
+	if (!m_Window)
+	{
+		glfwTerminate();
+		return -1;
+	}
+
+	/* Make the window's context current */
+	glfwMakeContextCurrent(m_Window);
+
+	glfwSetInputMode(m_Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+	if (glfwRawMouseMotionSupported())
+		glfwSetInputMode(m_Window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+
+	double xpos, ypos;
+	glfwGetCursorPos(m_Window, &xpos, &ypos);
+
+	m_Camera.SetPreviousMousePosition(xpos, ypos);
+
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+
+	glCullFace(GL_BACK);
+	glfwSwapInterval(1);
+
+	if (glewInit() != GLEW_OK)
+		std::cout << "Ohoh" << std::endl;
+
+	std::cout << glGetString(GL_VERSION) << std::endl;
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	return 0;
+}
+
 void Application3D::Run()
 {
 	{
-		SetupGLFWWindow();
+		if (SetupGLFWWindow() == -1)
+			return;
 
 		m_InputHandler->SetInputWindow(m_Window);
 
 		glfwSetCursorPosCallback(m_Window, InputHandler::MousePositionCallback);
-
 
 		if (!m_Window)
 			return;
@@ -175,55 +226,4 @@ void Application3D::Run()
 		}
 	}
 	glfwTerminate();
-}
-
-int Application3D::SetupGLFWWindow()
-{
-	/* Initialize the library */
-	if (!glfwInit())
-		return -1;
-
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-	//GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
-
-	m_Window = glfwCreateWindow(m_WindowWidth, m_WindowHeight, m_AppName.c_str(), NULL, NULL);
-
-	/* Create a windowed mode window and its OpenGL context */
-	if (!m_Window)
-	{
-		glfwTerminate();
-		return -1;
-	}
-
-	/* Make the window's context current */
-	glfwMakeContextCurrent(m_Window);
-
-	glfwSetInputMode(m_Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
-	if (glfwRawMouseMotionSupported())
-		glfwSetInputMode(m_Window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
-
-	double xpos, ypos;
-	glfwGetCursorPos(m_Window, &xpos, &ypos);
-
-	m_Camera.SetPreviousMousePosition(xpos, ypos);
-
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
-
-	glCullFace(GL_BACK);
-	glfwSwapInterval(1);
-
-	if (glewInit() != GLEW_OK)
-		std::cout << "Ohoh" << std::endl;
-
-	std::cout << glGetString(GL_VERSION) << std::endl;
-
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	return 0;
 }
