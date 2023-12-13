@@ -1,6 +1,7 @@
 #pragma once
 
 #include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 
 class Camera
 {
@@ -13,22 +14,24 @@ private:
 
 	glm::mat4 m_ProjectionMatrix;
 
-	float m_Sensitivity;
+	float m_Sensitivity = 0.1f;
+
+	float m_MovementSpeed = 0.05f;
 
 public:
 	Camera(float fovDegrees, float clipNear, float clipFar, float screenSizeX, float screenSizeY);
 
-	glm::mat4 GetViewMatrix() const;
+	inline glm::mat4 GetViewMatrix() const { return glm::lookAt(m_Eye, m_Eye + m_Normal, m_UpVector); }
 	inline glm::mat4 GetProjectionMatrix() const { return m_ProjectionMatrix; }
 
 	void MouseLook(int mouseX, int mouseY);
 
-	void MoveForward(float speed);
-	void MoveBackward(float speed);
-	void MoveLeft(float speed);
-	void MoveRight(float speed);
-	void MoveUp(float speed);
-	void MoveDown(float speed);
+	void MoveForward();
+	void MoveBackward();
+	void MoveLeft();
+	void MoveRight();
+	void MoveUp();
+	void MoveDown();
 
 	void SetPreviousMousePosition(float xMousePos, float yMousePos);
 };

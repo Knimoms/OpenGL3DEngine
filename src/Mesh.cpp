@@ -13,3 +13,17 @@ Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, st
 	m_VertexArray.AddBuffer(m_VertexBuffer, layout);
 }
 
+void Mesh::Bind() const
+{
+	m_VertexArray.Bind();
+	m_IndexBuffer.Bind();
+}
+
+void Mesh::Unbind()
+{
+	VertexArray::Unbind();
+	IndexBuffer::Unbind();
+}
+
+
+
