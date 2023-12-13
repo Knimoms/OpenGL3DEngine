@@ -48,9 +48,9 @@ void Application3D::Run()
 		if (!m_Window)
 			return;
 
-		std::vector<Vertex> positions =
+		std::vector<Vertex> grassBlockVertices =
 		{
-							/*vertices						normal					color					texturecoords*/
+						/*position						normal					color					texturecoords*/
 			{glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec3( 0.f, 0.f,  1.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.0f, 0.0f, 0.f)},
 			{glm::vec3( 0.5f, -0.5f,  0.5f), glm::vec3( 0.f, 0.f,  1.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.5f, 0.0f, 0.f)},
 			{glm::vec3( 0.5f,  0.5f,  0.5f), glm::vec3( 0.f, 0.f,  1.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.5f, 0.5f, 0.f)},
@@ -82,7 +82,7 @@ void Application3D::Run()
 			{glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec3( 0.f, -1.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.0f, 1.0f, 0.f)}
 		};
 
-		std::vector<unsigned int>  indices =
+		std::vector<unsigned int> grassBlockIndices =
 		{
 			0, 1, 2,
 			2, 3, 0,
@@ -114,7 +114,7 @@ void Application3D::Run()
 
 		std::vector <Texture> tex(textures, textures + sizeof(textures) / sizeof(Texture));
 
-		Mesh grassBlockMesh(positions, indices, tex);
+		Mesh grassBlockMesh(grassBlockVertices, grassBlockIndices, tex);
 
 		std::vector<Vertex> floorVertices =
 		{
@@ -132,14 +132,14 @@ void Application3D::Run()
 
 		Texture floorTextures[]
 		{
-			Texture("res/textures/sleepycat.jpg", "diffuse")
+			Texture("res/textures/cowinpool.jpg", "diffuse")
 		};
 
 		Transform floorTransform;
 
-		std::vector<Texture>s(floorTextures, floorTextures + sizeof(floorTextures) / sizeof(Texture));
+		std::vector<Texture>fT (floorTextures, floorTextures + sizeof(floorTextures) / sizeof(Texture));
 
-		Mesh FloorMesh(floorVertices, floorIndices, s);
+		Mesh FloorMesh(floorVertices, floorIndices, fT);
 
 		Renderer renderer;
 
@@ -152,12 +152,8 @@ void Application3D::Run()
 		int squarePlaneSize = 16;
 
 		for (int i = 0; i < squarePlaneSize; i++)
-		{
 			for (int j = 0; j < squarePlaneSize; j++)
-			{
 				GrassBlockTransforms.push_back({ glm::vec3(-squarePlaneSize / 2 + i, 0, -squarePlaneSize / 2 + j) ,glm::vec3(0, 0, 0) ,glm::vec3(1, 1, 1) });
-			}
-		}
 
 		while (!glfwWindowShouldClose(m_Window))
 		{
@@ -166,7 +162,10 @@ void Application3D::Run()
 			m_InputHandler->KeyboardMovementInputTick();
 			renderer.Clear();
 
-			renderer.DrawMeshWithTransforms(grassBlockMesh, shader, m_Camera, GrassBlockTransforms);
+			//renderer.DrawMeshWithTransforms(grassBlockMesh, shader, m_Camera, GrassBlockTransforms);
+
+			renderer.DrawMeshWithTransform(grassBlockMesh, shader, m_Camera, { glm::vec3(0, 2, -3), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1) });
+			//renderer.DrawMeshWithTransform(FloorMesh, shader, m_Camera, floorTransform);
 
 			/* Swap front and back buffers */
 			glfwSwapBuffers(m_Window);
@@ -188,7 +187,9 @@ int Application3D::SetupGLFWWindow()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	m_Window = glfwCreateWindow(m_WindowWidth, m_WindowHeight, m_AppName.c_str(), glfwGetPrimaryMonitor(), NULL);
+	//GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
+
+	m_Window = glfwCreateWindow(m_WindowWidth, m_WindowHeight, m_AppName.c_str(), NULL, NULL);
 
 	/* Create a windowed mode window and its OpenGL context */
 	if (!m_Window)
@@ -214,7 +215,6 @@ int Application3D::SetupGLFWWindow()
 	glEnable(GL_CULL_FACE);
 
 	glCullFace(GL_BACK);
-
 	glfwSwapInterval(1);
 
 	if (glewInit() != GLEW_OK)

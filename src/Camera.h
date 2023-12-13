@@ -7,7 +7,7 @@ class Camera
 {
 private:
 	glm::vec3 m_Eye;
-	glm::vec3 m_Normal;
+	glm::vec3 m_FrontVector;
 	glm::vec3 m_UpVector;
 
 	glm::vec2 m_PreviousMousePosition;
@@ -21,7 +21,7 @@ private:
 public:
 	Camera(float fovDegrees, float clipNear, float clipFar, float screenSizeX, float screenSizeY);
 
-	inline glm::mat4 GetViewMatrix() const { return glm::lookAt(m_Eye, m_Eye + m_Normal, m_UpVector); }
+	inline glm::mat4 GetViewMatrix() const { return glm::lookAt(m_Eye, m_Eye + m_FrontVector, m_UpVector); }
 	inline glm::mat4 GetProjectionMatrix() const { return m_ProjectionMatrix; }
 
 	void MouseLook(int mouseX, int mouseY);

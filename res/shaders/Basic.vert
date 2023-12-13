@@ -13,8 +13,6 @@ uniform mat4 u_Model;
 
 void main()
 {
-	vec4 newPosition = u_Projection * u_View * u_Model * position;
-
-	gl_Position = vec4(newPosition.xyzw);
+	gl_Position = u_Projection * u_View * u_Model * position;
 	v_TexCoord = texCoord;
 };

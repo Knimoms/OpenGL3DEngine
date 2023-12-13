@@ -5,23 +5,6 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include <iostream>
 
-void GLClearError()
-{
-	while (glGetError());
-}
-
-bool GLLogCall(const char* function, const char* file, int line)
-{
-	if (GLenum error = glGetError())
-	{
-		std::cout << "[OpenGL Error] (" << error << "): " << function <<
-			" " << file << ":" << line << std::endl;
-		return false;
-	}
-
-	return true;
-}
-
 void Renderer::Draw(const VertexArray& va, const IndexBuffer& ib, const Shader& shader, const Camera& camera) const
 {
 	va.Bind();
@@ -31,7 +14,7 @@ void Renderer::Draw(const VertexArray& va, const IndexBuffer& ib, const Shader& 
 	shader.SetUniformMat4f("u_Projection", camera.GetProjectionMatrix());
 	shader.SetUniformMat4f("u_View", camera.GetViewMatrix());
 
-	GLCall(glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, nullptr));
+	glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, nullptr);
 }
 
 void Renderer::DrawMesh(const Mesh& mesh, const Shader& shader, const Camera& camera) const
@@ -63,7 +46,7 @@ void Renderer::DrawMesh(const Mesh& mesh, const Shader& shader, const Camera& ca
 	shader.SetUniformMat4f("u_View", camera.GetViewMatrix());
 
 
-	GLCall(glDrawElements(GL_TRIANGLES, mesh.m_IndexBuffer.GetCount(), GL_UNSIGNED_INT, nullptr));
+	glDrawElements(GL_TRIANGLES, mesh.m_IndexBuffer.GetCount(), GL_UNSIGNED_INT, nullptr);
 }
 
 void Renderer::DrawMeshWithTransform(const Mesh& mesh, const Shader& shader, const Camera& camera, const Transform& transform) const
@@ -99,7 +82,7 @@ void Renderer::DrawMeshWithTransform(const Mesh& mesh, const Shader& shader, con
 	shader.SetUniformMat4f("u_View", camera.GetViewMatrix());
 
 
-	GLCall(glDrawElements(GL_TRIANGLES, mesh.m_IndexBuffer.GetCount(), GL_UNSIGNED_INT, nullptr));
+	glDrawElements(GL_TRIANGLES, mesh.m_IndexBuffer.GetCount(), GL_UNSIGNED_INT, nullptr);
 
 }
 
@@ -140,12 +123,12 @@ void Renderer::DrawMeshWithTransforms(const Mesh& mesh, const Shader& shader, co
 		shader.SetUniformMat4f("u_View", camera.GetViewMatrix());
 
 
-		GLCall(glDrawElements(GL_TRIANGLES, mesh.m_IndexBuffer.GetCount(), GL_UNSIGNED_INT, nullptr));
+		glDrawElements(GL_TRIANGLES, mesh.m_IndexBuffer.GetCount(), GL_UNSIGNED_INT, nullptr);
 	}
 
 }
 
 void Renderer::Clear() const
 {
-	GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
