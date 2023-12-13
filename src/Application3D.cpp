@@ -73,6 +73,8 @@ int Application3D::SetupGLFWWindow()
 	glEnable(GL_CULL_FACE);
 
 	glCullFace(GL_BACK);
+	glFrontFace(GL_CCW);
+
 	glfwSwapInterval(1);
 
 	if (glewInit() != GLEW_OK)
@@ -183,7 +185,7 @@ void Application3D::Run()
 
 		Texture floorTextures[]
 		{
-			Texture("res/textures/cowinpool.jpg", "diffuse")
+			Texture("res/textures/sleepycat.jpg", "diffuse")
 		};
 
 		Transform floorTransform;
@@ -193,8 +195,6 @@ void Application3D::Run()
 		Mesh FloorMesh(floorVertices, floorIndices, fT);
 
 		Renderer renderer;
-
-		glm::vec3 backgroundColor = glm::vec3((float)113 / 255, (float)188 / 255, (float)225 / 255);
 
 		/* Loop until the user closes the window */
 
@@ -208,14 +208,12 @@ void Application3D::Run()
 
 		while (!glfwWindowShouldClose(m_Window))
 		{
-			glClearColor(backgroundColor.x, backgroundColor.y, backgroundColor.z, 1.0);
-
 			m_InputHandler->KeyboardMovementInputTick();
 			renderer.Clear();
 
-			//renderer.DrawMeshWithTransforms(grassBlockMesh, shader, m_Camera, GrassBlockTransforms);
-
-			renderer.DrawMeshWithTransform(grassBlockMesh, shader, m_Camera, { glm::vec3(0, 1.5f, -5), glm::vec3(0, 45, 0), glm::vec3(1, 1, 1) });
+			//renderer.DrawMeshWithTransform(grassBlockMesh, shader, m_Camera, { glm::vec3(0, 1.5f, -5), glm::vec3(0, 45, 0), glm::vec3(1, 1, 1) });
+			renderer.DrawMeshWithTransforms(grassBlockMesh, shader, m_Camera, GrassBlockTransforms);
+			
 			//renderer.DrawMeshWithTransform(FloorMesh, shader, m_Camera, floorTransform);
 
 			/* Swap front and back buffers */
@@ -225,5 +223,6 @@ void Application3D::Run()
 			glfwPollEvents();
 		}
 	}
+
 	glfwTerminate();
 }

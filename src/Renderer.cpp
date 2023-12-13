@@ -111,9 +111,12 @@ void Renderer::DrawMeshWithTransforms(const Mesh& mesh, const Shader& shader, co
 		mesh.m_Textures[0].Bind(i);
 	}
 
-	size_t meshAmount = transforms.size();
+	size_t transformAmount = transforms.size();
 
-	for (int i = 0; i < meshAmount; i++)
+	shader.SetUniformMat4f("u_Projection", camera.GetProjectionMatrix());
+	shader.SetUniformMat4f("u_View", camera.GetViewMatrix());
+
+	for (int i = 0; i < transformAmount; i++)
 	{
 		glm::mat4 modelMatrix = glm::translate(glm::mat4(1.0f), transforms[i].Translation);
 		modelMatrix = glm::rotate(modelMatrix, glm::radians(transforms[i].Rotation.x), glm::vec3(1, 0, 0));
@@ -122,9 +125,6 @@ void Renderer::DrawMeshWithTransforms(const Mesh& mesh, const Shader& shader, co
 		modelMatrix = glm::scale(modelMatrix, transforms[i].Scale);
 
 		shader.SetUniformMat4f("u_Model", modelMatrix);
-		shader.SetUniformMat4f("u_Projection", camera.GetProjectionMatrix());
-		shader.SetUniformMat4f("u_View", camera.GetViewMatrix());
-
 
 		glDrawElements(GL_TRIANGLES, mesh.m_IndexBuffer.GetCount(), GL_UNSIGNED_INT, nullptr);
 	}
@@ -133,5 +133,7 @@ void Renderer::DrawMeshWithTransforms(const Mesh& mesh, const Shader& shader, co
 
 void Renderer::Clear() const
 {
+	glm::vec3 backgroundColor = glm::vec3((float)113 / 255, (float)188 / 255, (float)225 / 255);
+	glClearColor(backgroundColor.x, backgroundColor.y, backgroundColor.z, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
