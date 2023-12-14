@@ -22,6 +22,3 @@ void Mesh::Unbind()
 	VertexArray::Unbind();
 	IndexBuffer::Unbind();
 }
-
-
-
