@@ -17,12 +17,16 @@ void Camera::MouseLook(int mouseX, int mouseY)
 
 	m_PreviousMousePosition = currentMousePosition;
 
-	m_FrontVector = glm::rotate(m_FrontVector, glm::radians(deltaMousePosition[0] * m_Sensitivity), glm::vec3(0.f, 1.f, 0.f));
+	m_FrontVector = glm::rotate(m_FrontVector, glm::radians(deltaMousePosition[0] * m_Sensitivity), cm_WorldUpVector);
 
 	glm::vec3 rightVector = glm::normalize(glm::cross(m_FrontVector, glm::vec3(0.f, 1.f, 0.f)));
 
 	rightVector = glm::normalize(rightVector);
-	m_FrontVector = glm::rotate(m_FrontVector, glm::radians(deltaMousePosition[1] * m_Sensitivity), rightVector);
+	glm::vec3 newFrontVector = glm::rotate(m_FrontVector, glm::radians(deltaMousePosition[1] * m_Sensitivity), rightVector);
+
+	if (glm::dot(newFrontVector, glm::cross(cm_WorldUpVector, rightVector)) > 0.005f)
+		m_FrontVector = newFrontVector;
+
 	m_UpVector = glm::cross(rightVector, m_FrontVector);
 }
 

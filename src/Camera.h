@@ -11,8 +11,9 @@ private:
 	glm::vec3 m_UpVector;
 
 	glm::vec2 m_PreviousMousePosition;
-
 	glm::mat4 m_ProjectionMatrix;
+
+	const glm::vec3 cm_WorldUpVector = glm::vec3(0, 1, 0);
 
 	float m_Sensitivity = 0.1f;
 
